@@ -1,23 +1,14 @@
+import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
+
 group = "com.brandontalbot"
 version = "1.0.0"
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-        maven(url = "https://dl.bintray.com/kotlin/kotlin-eap")
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:3.6.3")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4-M2")
-    }
-}
-
 plugins {
-    kotlin("multiplatform") version "1.4-M2" apply false
-    kotlin("plugin.serialization") version "1.4-M2" apply false
-    kotlin("jvm") version "1.4-M2" apply false
-    id("org.jetbrains.kotlin.js") version "1.4-M2" apply false
+    kotlin("multiplatform") version "1.4.32" apply false
+    kotlin("plugin.serialization") version "1.4.32" apply false
+    kotlin("jvm") version "1.4.32" apply false
+    kotlin("js") version "1.4.32" apply false
+    kotlin("android") version "1.4.32" apply false
 }
 
 allprojects {
@@ -32,17 +23,15 @@ allprojects {
     }
 }
 
-afterEvaluate {
-    tasks {
-        register<Copy>("dockerDist") {
-            group = "docker"
-            dependsOn(":server:distTar", ":website:browserDistribution")
+tasks {
+    register("runAll") {
+        val webpack =
+            subprojects.find { it.name == "djweb" }!!.tasks.getByName<KotlinWebpack>("browserDevelopmentWebpack")
 
-            into(File(buildDir, "dist"))
-            from(getByPath(":server:distTar").outputs.files)
-            from(getByPath(":website:browserDistribution").outputs.files) {
-                into("website")
-            }
+        val serverRun = subprojects.find { it.name == "djserver" }!!.tasks.getByName<JavaExec>("run") {
+            environment("WEB_DIR", webpack.destinationDirectory)
         }
+
+        finalizedBy(serverRun, webpack)
     }
 }
