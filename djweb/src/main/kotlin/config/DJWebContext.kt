@@ -12,6 +12,8 @@ object DJWebContext {
                 return when (key) {
                     "DEBUG" -> "true"
                     "SERVER_PORT" -> window.location.port
+                    "SERVER_HOST" -> window.location.hostname
+                    "SERVER_PROTOCOL" -> window.location.protocol.removeSuffix(":")
                     else -> null
                 }.also {
                     console.log("[$key] -> $it")
