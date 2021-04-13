@@ -1,8 +1,9 @@
 package series
 
 import kotlinx.css.*
-import kotlinx.css.properties.BoxShadows
+import kotlinx.css.properties.*
 import styled.StyleSheet
+import kotlin.time.seconds
 
 object SeriesStyles : StyleSheet("SeriesStyles", isStatic = true) {
     val seriesList by css {
@@ -17,7 +18,24 @@ object SeriesStyles : StyleSheet("SeriesStyles", isStatic = true) {
     val seriesItem by css {
         display = Display.flex
         width = 100.pct
-        boxShadow = BoxShadows()
+        borderRadius = 25.px
+        boxShadow(
+            Color("#000000AA"),
+            blurRadius = 8.px,
+            offsetY = 8.px,
+            offsetX = 2.px
+        )
+        transition(duration = Time("0.3s"))
+
+        hover {
+            boxShadow(
+                Color("#000000AA"),
+                blurRadius = 12.px,
+                offsetY = 8.px,
+                offsetX = 2.px,
+                spreadRadius = 5.px
+            )
+        }
 
         before {
             content = QuotedString("")
