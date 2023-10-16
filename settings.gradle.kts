@@ -1,4 +1,8 @@
-rootProject.name = "DJServerUtils"
-include("djcommon")
-include("djserver")
-include("djweb")
+pluginManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = "BTWeb"
